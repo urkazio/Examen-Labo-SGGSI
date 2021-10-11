@@ -1,0 +1,9 @@
+for i in {1..46}
+do
+    touch /home/urko/Labo2/rdo
+      hashaux=$(md5sum /home/urko/Labo2/imagen/imagen${i}.jpg)
+   	 echo "$hashaux" >> /home/urko/Labo2/rdo
+
+done
+    grep "e5ed313192776744b9b93b1320b5e268" /home/urko/Labo2/rdo
+    rm /home/urko/Labo2/rdo
