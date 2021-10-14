@@ -12,11 +12,11 @@ rm estavacio.txt
 
 if [[ -z "$estavacio" ]]; then	#si el dir esta vacio se debe hacer la primera copia de seguridad (completa)
     cd /var/tmp/backups
-    sudo mkdir "$(date +"%d-%m-%Y")"
-    sudo rsync -av /home/urko/Labo1/Copias /var/tmp/backups/`date +%d-%m-%Y`/
+    sudo mkdir completa
+    sudo rsync -av /home/urko/Labo1/Copias /var/tmp/backups/completa/
 else
    	 ultimaCarpeta=$(ls -td /var/tmp/backups/*/ |head -1) #comprobar cual es la ultima CARPETA creada en el directorio de los backups (para hacer la diferencial respecto a ella)
-   	 sudo rsync -av --compare-dest=$ultimaCarpeta /var/tmp/backups/`date +%d-%m-%Y-%H`/
+   	 sudo rsync -av --compare-dest=/var/tmp/backups/completa/ --compare-dest="$ultimaCarpeta" /var/tmp/backups/`date +%d-%m-%Y-%H`/
 fi
 
 sudo mysqldump -u root -p MYDATABASE > /var/tmp/`date+ %d-%m-%Y`/copiaDB.sql  #copia bd
