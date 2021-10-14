@@ -4,24 +4,18 @@ if [ ! -d /var/tmp/backups ]; then   #si el directorio de los backups no existe,
     mkdir /var/tmp/backups
 fi
 
-cd
-touch estavacio.txt
-ls /var/tmp/backups >> estavacio.txt   #copiar nombres de archivos existentes en la carpeta backup
-estavacio=$(cat  ~/estavacio.txt)
-rm estavacio.txt
-
-if [[ -z "$estavacio" ]]; then	#si el dir esta vacio se debe hacer la primera copia de seguridad (completa)
-    cd /var/tmp/backups
+if [ -z "$(ls -A /var/tmp/backups)" ]; then
+    cd /var/tmp/backups   #si el directorio está vacio se debe hacer la primera copia completa
     sudo mkdir completa
     sudo rsync -av /home/urko/Labo1/Copias /var/tmp/backups/completa/
 else
-   	 ultimaCarpeta=$(ls -td /var/tmp/backups/*/ |head -1) #comprobar cual es la ultima CARPETA creada en el directorio de los backups (para hacer la diferencial respecto a ella)
-   	 sudo rsync -av --compare-dest=/var/tmp/backups/completa/ --compare-dest="$ultimaCarpeta" /var/tmp/backups/`date +%d-%m-%Y-%H`/
+     ultimaCarpeta=$(ls -td /var/tmp/backups/*/ |head -1) #comprobar cual es la ultima CARPETA creada en el directorio de los backups (para hacer la incremental respecto a ella)
+   	 sudo rsync -av --compare-dest=/var/tmp/backups/completa/ --compare-dest="$ultimaCarpeta" /home/urko/Labo1/Copias /var/tmp/backups/`date +%d-%m-%Y-%H`/
 fi
 
 sudo mysqldump -u root -p MYDATABASE > /var/tmp/`date+ %d-%m-%Y`/copiaDB.sql  #copia bd
 
-urko@urkovb:~$ sudo crontab -e
+#urko@urkovb:~$ sudo crontab -e
 
 # Edit this file to introduce tasks to be run by cron.
 #
